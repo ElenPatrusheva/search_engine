@@ -21,6 +21,15 @@
   </form>
   {% if results %}
   <h2>Results</h2>
-        {{ results }}
+        {% for doc in results %}
+
+        {{ doc.id }}<br>
+        <b>Authors: </b> {{ doc.artist }}<br>
+        <b>Title: </b>{{ doc.title }}<br>
+        {% for line in doc.text.split('\n') %}
+        {{line}}<br>
+        {% endfor %}
+        <br>
+        {% endfor %}
   {% endif %}
 </doctype>

@@ -14,6 +14,7 @@ app = Flask(__name__)
 @app.route('/results')
 def search_results(search):
     results = search_query(inv_ind, search.search.data, sound_ind, pref_ind, rev_ind)
+    results = [corpus_dict[x] for x in results]
     '''
     results = []
     results = ['1', '2']
