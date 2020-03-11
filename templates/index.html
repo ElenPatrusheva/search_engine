@@ -1,0 +1,26 @@
+<doctype html>
+  <head>
+      <title>Music Search</title>
+  </head>
+  <h2> Music Search</h2>
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      <ul class=flashes>
+      {% for message in messages %}
+        <li>{{ message }}</li>
+      {% endfor %}
+      </ul>
+    {% endif %}
+  {% endwith %}
+  {% from "_formhelpers.html" import render_field %}
+  <form method=post>
+    <dl>
+      {{ render_field(form.search) }}
+    </dl>
+    <p><input type=submit value=Search>
+  </form>
+  {% if results %}
+  <h2>Results</h2>
+        {{ results }}
+  {% endif %}
+</doctype>
