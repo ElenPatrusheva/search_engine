@@ -62,12 +62,12 @@ def make_or(index, terms, aux=set(), to_rm=set()):
         rel_docs = rel_docs.union(find_docs_with_word(t, index, aux, to_rm))
     return rel_docs
 
-def search_query(index, query, sound_ind, prer_ind, reverse_ind):
+def search_query(index, query, sound_ind, prer_ind, reverse_ind, aux, to_rm):
     query = preprocess_query(query, sound_ind, prer_ind, reverse_ind)
     rel_docs = set()
     flag = True
     for or_statements in query:
-        or_res = make_or(index, or_statements)
+        or_res = make_or(index, or_statements, aux, to_rm)
         if flag:
             flag = False
             rel_docs.update(or_res)

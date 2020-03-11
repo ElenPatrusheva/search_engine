@@ -169,7 +169,13 @@ class Soundex:
         # check if the first letter werer skipped (0) and pad with '0'
         tmp = term[0].upper() + (tmp[1:] if mapper[term[0].lower()] != 0 else tmp) + '0' * 4
         return tmp[:4]
-                
+
+    def add(self, t):
+        sound = self.soundex(t)
+        if not(sound in self.inverted_index):
+            self.inverted_index[sound] = set()
+        self.inverted_index[sound].add(t)
+
     def count_levenhstein(self, t1, t2):
         d = np.zeros((len(t1) + 1, len(t2) + 1))
         for i in range(len(t1) + 1):
@@ -184,4 +190,35 @@ class Soundex:
                               d[i - 1, j - 1] + (0 if t1[i - 1] == t2[j - 1] else 1))
         return d[-1, -1] 
 
+class Search_engine:
+    def __init__(self, ind_to_doc, inv_index, sound_ind, pref_ind, rev_ind):
+        self.index = inv_index
+        self.sound_ind = sound_ind
+        self.pref_ind = pref_ind
+        self.rev_ind = rev_ind
+        self.aux = {}
+        self.to_rm = set()
+        self.ind_to_doc = ind_to_doc
+        
+    def add_doc(self, doc):
+        self.ind_to_doc[doc.id] = doc
+        clean = lemmatization(tokenize(normalize(doc.text)))
+        for word in clean:
+            if not (word in self.aux):
+                self.aux[word] = set()
+            self.aux[word].add(doc.id)
+            self.pref_ind.add(word[::-1])            
+            self.rev_ind.add(word)
+            self.sound_ind.add(word)
+
+    def rm_doc(self, doc):
+        self.to_rm = self.to_rm.add(doc.id)
+        pass
+    
+    def merge(self):
+        self.index.merge(self.aux, self.to_rm)
+        # TODO rm from in memory inds
+        aux = {}
+        to_rm = set()
+        pass
 
